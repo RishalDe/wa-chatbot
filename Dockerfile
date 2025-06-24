@@ -1,14 +1,20 @@
-# Use a Java 17 runtime base image
-FROM eclipse-temurin:17-jdk-jammy
+# Stage 1: Build the jar
+FROM maven:3.9.4-eclipse-temurin-17 as build
 
-# Set working directory inside container
 WORKDIR /app
 
-# Copy the packaged jar file from your local 'target' directory to the container
-COPY target/telegramchat-0.0.1-SNAPSHOT.jar app.jar
+COPY pom.xml .
+COPY src ./src
 
-# Expose port 8080 (default Spring Boot port)
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the app
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+COPY --from=build /app/target/telegramchat-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 
-# Command to run your Spring Boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]
