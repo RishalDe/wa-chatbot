@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Chat</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: #f0f0f0;
+        }
+
+        .contacts {
+            width: 30%;
+            background-color: #ffffff;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .contacts h2 {
+            padding: 10px;
+            background-color: #ededed;
+            margin: 0;
+        }
+
+        .contact {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .contact:hover {
+            background-color: #f6f6f6;
+        }
+
+        .chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #e5ddd5;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            word-wrap: break-word;
+        }
+
+        .from-me {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+        }
+
+        .from-other {
+            background-color: #ffffff;
+            align-self: flex-start;
+        }
+
+        .input-bar {
+            display: flex;
+            padding: 10px;
+            background: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        .input-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+        }
+
+        .input-bar button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #128c7e;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="contacts">
+    <h2>Salty Tuco</h2>
+    <div class="contact" onclick="selectUser('Alice')">Alice</div>
+    <div class="contact" onclick="selectUser('Bob')">Bob</div>
+</div>
+
+<div class="chat">
+    <div class="messages" id="messageArea"></div>
+    <div class="input-bar">
+        <input type="text" id="messageInput" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
