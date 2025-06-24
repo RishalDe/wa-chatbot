@@ -1,4 +1,26 @@
-let currentUser = 'Alice';
+let currentUser = null;
+
+// Load the conversation list every 5 seconds
+setInterval(loadConversations, 5000);
+window.onload = () => {
+    loadConversations();
+};
+
+function loadConversations() {
+    fetch('/messages/conversations')
+        .then(res => res.json())
+        .then(numbers => {
+            const list = document.getElementById('conversationList');
+            list.innerHTML = '<h2>Salty Tuco</h2>';
+            numbers.forEach(number => {
+                const div = document.createElement('div');
+                div.className = 'contact';
+                div.innerText = number;
+                div.onclick = () => selectUser(number);
+                list.appendChild(div);
+            });
+        });
+}
 
 function selectUser(user) {
     currentUser = user;
@@ -7,26 +29,28 @@ function selectUser(user) {
 }
 
 function loadMessages() {
-    fetch('/messages')
+    if (!currentUser) return;
+
+    fetch(`/messages/conversation/${currentUser}`)
         .then(res => res.json())
         .then(data => {
             const container = document.getElementById('messageArea');
             container.innerHTML = '';
             data.forEach(msg => {
-                if (msg.to === currentUser || msg.from === currentUser) {
-                    const div = document.createElement('div');
-                    div.classList.add('message');
-                    div.classList.add(msg.from === 'Me' ? 'from-me' : 'from-other');
-                    div.innerText = `${msg.from}: ${msg.text}`;
-                    container.appendChild(div);
-                }
+                const div = document.createElement('div');
+                div.classList.add('message');
+                div.classList.add(msg.from === 'BOT' ? 'from-me' : 'from-other');
+                div.innerText = `${msg.from}: ${msg.text}`;
+                container.appendChild(div);
             });
         });
 }
 
 function sendMessage() {
     const text = document.getElementById('messageInput').value;
-    const message = { from: 'Me', to: currentUser, text: text };
+    if (!text || !currentUser) return;
+
+    const message = { from: 'BOT', to: currentUser, text: text };
 
     fetch('/messages', {
         method: 'POST',
@@ -37,7 +61,3 @@ function sendMessage() {
         loadMessages();
     });
 }
-
-window.onload = () => {
-    loadMessages();
-};
